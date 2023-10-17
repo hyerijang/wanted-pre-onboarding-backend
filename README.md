@@ -27,6 +27,22 @@
 6. 채용 공고 지원 (선택)
 
 ## 구현 과정 및 고려사항
+
+### API URI
+| 기능         | METHOD | URI                                |
+|------------|--------|------------------------------------|
+| 채용공고 등록    | POST   | /recruits                          |
+| 채용공고 수정    | PATCH  | /recruits/{id}                     |
+| 채용공고 삭제    | DELETE | /recruits/{id}                     |
+| 채용공고 목록 조회 | GET    | /recruits/?page={page},size={size} |
+| 채용 상세 페이지  | GET    | /recruits/{id}                     |
+
+
+### 공통
+- Requset, Response에 validation 적용
+- DTO - Entity 변환은 서비스단에서 이루어진다.
+- 단위테스트 작성 (repository, service, controller, beanValidation)
+
 ### 회사 등록
 ```json
 {
@@ -63,5 +79,3 @@
 
 - 응답 시 채용공고ID를 포함한다.
 - 응답 시 회사ID가 아닌 회사명을 반환한다.
-- Requset, Response에 validation 적용
-- 단위테스트 작성 (repository, service, controller, beanValidation)
