@@ -1,6 +1,7 @@
 package com.example.wantedpreonboardingbackend.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +19,7 @@ public class Company {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    @NotEmpty
     private String name;
 
     @OneToMany(mappedBy = "company")

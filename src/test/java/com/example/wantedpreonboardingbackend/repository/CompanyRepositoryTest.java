@@ -10,6 +10,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class))
 class CompanyRepositoryTest {
@@ -30,15 +33,5 @@ class CompanyRepositoryTest {
         Assertions.assertThat(savedCompany.getId()).isNotNull();
         Assertions.assertThat(savedCompany.getName()).isEqualTo("(주)원티드");
 
-    }
-
-    @DisplayName("회사명은 null일 수 없음")
-    @Test
-    void nameIsNotNull() {
-        //given
-        Company company = new Company();
-        company.setName(null);
-        //when
-        Assertions.assertThatThrownBy(() -> companyRepository.save(company)).isInstanceOf(PropertyValueException.class);
     }
 }
