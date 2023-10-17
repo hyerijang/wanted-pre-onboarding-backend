@@ -41,7 +41,7 @@
 ### 공통
 - Requset, Response에 validation 적용
 - DTO - Entity 변환은 서비스단에서 이루어진다.
-- 단위테스트 작성 (repository, service, controller, beanValidation)
+- 단위테스트 작성 (repository, service, controller, dtoValidation)
 
 ### 회사 등록
 ```json
@@ -79,3 +79,27 @@
 
 - 응답 시 채용공고ID를 포함한다.
 - 응답 시 회사ID가 아닌 회사명을 반환한다.
+
+### 채용공고 수정
+
+```json
+(requset 예시)
+   {
+      "position":"백엔드 주니어 개발자",
+      "rewoard":1000000,
+      "content":"원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..",
+      "skills":"Python"
+   }
+```
+
+```json
+(response 예시)
+{
+   "position": "프론트엔드 주니어 개발자",
+   "rewoard": 77777,
+   "content": "원티드랩에서 프론트엔드 주니어 개발자를 채용합니다. 자격요건은..",
+   "skills": "HTML"
+}
+```
+- 회사 정보는 수정할 수 없다.
+- 존재하지않는 ID로 채용공고를 수정하려하면 오류가 발생해야한다.

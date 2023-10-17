@@ -1,12 +1,14 @@
 package com.example.wantedpreonboardingbackend.domain;
 
 
+import com.example.wantedpreonboardingbackend.dto.EditRecruitRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Getter
@@ -46,5 +48,13 @@ public class Recruit {
     public void setCompany(Company company) {
         this.company = company;
         company.getRecruits().add(this);
+    }
+
+    public void editRecruit(EditRecruitRequest editRecruitRequest) {
+        //회사id 이외 모두 수정 가능
+        this.position = editRecruitRequest.getPosition();
+        this.reward = editRecruitRequest.getReward();
+        this.content = editRecruitRequest.getContent();
+        this.skills = editRecruitRequest.getSkills();
     }
 }
