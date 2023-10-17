@@ -38,6 +38,30 @@
 
 ### 채용공고 등록
 
-0.회사 등록구현
-- 회사와 채용공고는 1대다 관계이다. -> 채용공고에는 회사 ID가 FK로 포함된다. 
--  회사명은 null일 수 없다.
+```json
+(requset 예시)
+   {
+      "position":"백엔드 주니어 개발자",
+      "rewoard":1000000,
+      "content":"원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..",
+      "skills":"Python",
+      "companyId": 1001
+   }
+```
+
+```json
+(response 예시)
+{
+   "id": 100,
+   "position": "백엔드 주니어 개발자",
+   "rewoard": 1000000,
+   "content": "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..",
+   "skills": "Python",
+   "companyName": "원티드"
+}
+```
+
+- 응답 시 채용공고ID를 포함한다.
+- 응답 시 회사ID가 아닌 회사명을 반환한다.
+- Requset, Response에 validation 적용
+- 단위테스트 작성 (repository, service, controller, beanValidation)
