@@ -1,6 +1,5 @@
 package com.example.wantedpreonboardingbackend.dto;
 
-import com.example.wantedpreonboardingbackend.dto.AddRecruitRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -11,7 +10,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class BeanValidationTest {
+public class DtoValidationTest {
     private AddRecruitRequest createFullFilledAddRecruitRequest() {
         // 검증을 만족하는 request
         AddRecruitRequest addRecruitRequest = new AddRecruitRequest();
