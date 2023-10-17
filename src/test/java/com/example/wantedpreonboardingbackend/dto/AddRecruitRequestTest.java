@@ -4,13 +4,15 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DtoValidationTest {
+public class AddRecruitRequestTest {
+
     private AddRecruitRequest createFullFilledAddRecruitRequest() {
         // 검증을 만족하는 request
         AddRecruitRequest addRecruitRequest = new AddRecruitRequest();
@@ -22,8 +24,9 @@ public class DtoValidationTest {
         return addRecruitRequest;
     }
 
+    @DisplayName("validation_통과")
     @Test
-    void validation_통과() {
+    void create_success() {
         //given
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         Validator validator = validatorFactory.getValidator();
@@ -38,7 +41,7 @@ public class DtoValidationTest {
 
 
     @Test
-    void 회사ID는_null일_수_없다() {
+    void create_fail_회사ID는_null일_수_없다() {
         //given
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         Validator validator = validatorFactory.getValidator();
@@ -52,7 +55,7 @@ public class DtoValidationTest {
     }
 
     @Test
-    void 채용리워드는_null일_수_없다() {
+    void create_fail_채용리워드는_null일_수_없다() {
         //given
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         Validator validator = validatorFactory.getValidator();
@@ -67,7 +70,7 @@ public class DtoValidationTest {
 
 
     @Test
-    void 내용은_empty일_수_없다() {
+    void create_fail_내용은_empty일_수_없다() {
         //given
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         Validator validator = validatorFactory.getValidator();
@@ -81,7 +84,7 @@ public class DtoValidationTest {
     }
 
     @Test
-    void 채용포지션은_empty일_수_없다() {
+    void create_fail_채용포지션은_empty일_수_없다() {
         //given
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         Validator validator = validatorFactory.getValidator();
@@ -95,7 +98,7 @@ public class DtoValidationTest {
     }
 
     @Test
-    void 사용기술은_empty일_수_없다() {
+    void create_fail_사용기술은_empty일_수_없다() {
         //given
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         Validator validator = validatorFactory.getValidator();
@@ -107,6 +110,7 @@ public class DtoValidationTest {
         assertTrue(!violations.isEmpty());
         validatorFactory.close();
     }
+
 
 
 }
