@@ -5,9 +5,11 @@ import com.example.wantedpreonboardingbackend.domain.Recruit;
 import com.example.wantedpreonboardingbackend.dto.AddRecruitRequest;
 import com.example.wantedpreonboardingbackend.dto.AddRecruitResponse;
 import com.example.wantedpreonboardingbackend.dto.DeleteRecruitResponse;
+import com.example.wantedpreonboardingbackend.dto.RecruitDto;
 import com.example.wantedpreonboardingbackend.service.RecruitService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,8 +22,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.example.wantedpreonboardingbackend.controller.RecruitController.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -121,6 +126,29 @@ class RecruitControllerTest {
                 .andExpect(jsonPath("id").exists())
                 .andExpect(jsonPath("deleted").exists())
                 .andExpect(jsonPath("deleted").value(Boolean.TRUE)) // True여야함
+                .andDo(MockMvcResultHandlers.print());
+
+    }
+
+
+    @DisplayName("채용공고 조회")
+    @Test
+    void getList() throws Exception {
+        //given
+        List<RecruitDto> response = new ArrayList<>();
+        response.add(new RecruitDto(makeSampleRecruit()));
+        response.add(new RecruitDto(makeSampleRecruit()));
+        response.add(new RecruitDto(makeSampleRecruit()));
+        doReturn(response).when(recruitService).findRecruits(0,20);
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.get("/recruits")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .queryParam("offset", "0")
+                        .queryParam("limit", "20")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("data").exists())
+                .andExpect(jsonPath("data.size()").value(3))
                 .andDo(MockMvcResultHandlers.print());
 
     }

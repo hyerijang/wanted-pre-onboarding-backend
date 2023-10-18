@@ -103,4 +103,27 @@ class RecruitRepositoryTest {
 
         return savedRecruitList;
     }
+
+    @DisplayName("채용 공고 목록에는 삭제된 공고가 포함되어서는 안된다.")
+    @Test
+    void list() {
+        //given
+        Map<Long, Recruit> savedRecruitList = saveRecruits();
+        Long id = savedRecruitList.keySet().iterator().next();
+        Recruit one = recruitRepository.findOne(id);
+        one.deleteRecruit(); // 공고 1개 삭제
+        int offset = 0;
+        int limit = 0;
+        //when
+        List<Recruit> result = em.createQuery("select r from Recruit r join fetch  r.company c where r.isDeleted = False ", Recruit.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+
+        //than
+        for (Recruit r : result) {
+            Assertions.assertThat(r.isDeleted()).isEqualTo(Boolean.FALSE); // 삭제되지 않은 공고만 조회되어야한다.
+        }
+    }
+
 }

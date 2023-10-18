@@ -29,13 +29,13 @@
 ## 구현 과정 및 고려사항
 
 ### API 명세
-| 기능         | METHOD | URI                                |
-|------------|--------|------------------------------------|
-| 채용공고 등록    | POST   | /recruits                          |
-| 채용공고 수정    | PATCH  | /recruits/{id}                     |
-| 채용공고 삭제    | DELETE | /recruits/{id}                     |
-| 채용공고 목록 조회 | GET    | /recruits/?page={page},size={size} |
-| 채용 상세 페이지  | GET    | /recruits/{id}                     |
+| 기능         | METHOD | URI                                      |
+|------------|--------|------------------------------------------|
+| 채용공고 등록    | POST   | /recruits                                |
+| 채용공고 수정    | PATCH  | /recruits/{id}                           |
+| 채용공고 삭제    | DELETE | /recruits/{id}                           |
+| 채용공고 목록 조회 | GET    | /recruits/?offset={offset},limit={limit} |
+| 채용 상세 페이지  | GET    | /recruits/{id}                           |
 
 
 ### 공통
@@ -106,9 +106,41 @@
 
 ### 채용공고 삭제
 ```json
+(response 예시)
 {
    "id": 1802,
    "deleted": true
 }
 ```
 - Soft Delete 사용
+
+### 채용
+
+```json
+(response 예시)
+{
+    "data": [
+        {
+            "id": 1703,
+            "position": "백엔드 주니어 개발자",
+            "reward": 1000000,
+            "content": "원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..",
+            "skills": "Python",
+            "companyName": "원티드랩"
+        },
+        {
+            "id": 1704,
+            "position": "백엔드 개발자",
+            "reward": 9000000,
+            "content": "쿠팡 개발자 모집중",
+            "skills": "Java",
+            "companyName": "(주)쿠팡"
+        }
+    ]
+}
+```
+
+- 삭제된 데이터를 제외한 전체 공고를 조회한다.
+- default offset = 0,  limit = 20
+- 페치 조인으로 1+N 방지
+- 응답 시 Result 클래스로 컬렉션을 감싸서 향후 필요한 필드 (e.g. size) 추가할 수 있게 함

@@ -2,9 +2,14 @@ package com.example.wantedpreonboardingbackend.controller;
 
 import com.example.wantedpreonboardingbackend.dto.*;
 import com.example.wantedpreonboardingbackend.service.RecruitService;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @Slf4j
@@ -31,6 +36,22 @@ public class RecruitController {
     @DeleteMapping("/{id}")
     public DeleteRecruitResponse removeRecruit(@PathVariable Long id) {
         return recruitService.delete(id);
+    }
+
+
+    //3.채용공고 삭제
+    @GetMapping()
+    public Result recruits(@RequestParam(value = "offset", defaultValue = "0") int offset, @RequestParam(value = "limit", defaultValue = "20") int limit) {
+        List<RecruitDto> result = recruitService.findRecruits(offset, limit);
+        log.info("size = {}", result.size());
+        return new Result(result);
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class Result<T> {
+        private T data;
     }
 
 }

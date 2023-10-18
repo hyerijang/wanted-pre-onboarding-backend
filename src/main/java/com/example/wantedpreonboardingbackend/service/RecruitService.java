@@ -1,5 +1,6 @@
 package com.example.wantedpreonboardingbackend.service;
 
+import com.example.wantedpreonboardingbackend.controller.RecruitController;
 import com.example.wantedpreonboardingbackend.domain.Company;
 import com.example.wantedpreonboardingbackend.domain.Recruit;
 import com.example.wantedpreonboardingbackend.dto.*;
@@ -10,6 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -49,4 +54,17 @@ public class RecruitService {
         recruit.deleteRecruit();
         return new DeleteRecruitResponse(recruit);
     }
+
+    /**
+     * 전체 회원 조회
+     */
+    public List<RecruitDto> findRecruits(int offset, int limit) {
+        List<Recruit> recruits = recruitRepository.findAll(offset, limit);
+        //DTO 변환
+        List<RecruitDto> collect = recruits.stream()
+                .map(r -> RecruitDto.builder().recruit(r).build())
+                .collect(Collectors.toList());
+        return collect;
+    }
+
 }

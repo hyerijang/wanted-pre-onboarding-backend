@@ -13,9 +13,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @Transactional
@@ -111,15 +114,30 @@ class RecruitServiceTest {
 
     private Long addSampleData() {
         Recruit recruit = Recruit.builder()
-                .skills("Python")
-                .position("백엔드 주니어 개발자")
-                .reward(1000000L)
-                .content("원티드랩에서 프론트엔드엔드 주니어 개발자를 채용합니다. 자격요건은..")
-                .company(generateCompany("(주)원티드"))
-                .build();
+                .skills("Python").position("백엔드 주니어 개발자").reward(1000000L).content("원티드랩에서 프론트엔드엔드 주니어 개발자를 채용합니다. 자격요건은..").company(generateCompany("(주)원티드")).build();
         Long id = recruitRepository.save(recruit);
-        when(recruitRepository.findOne(anyLong())).thenReturn(recruit);
+        when(recruitRepository.findOne(id)).thenReturn(recruit);
 
         return id;
+    }
+
+
+    @Test
+    @DisplayName("채용공고 조회")
+    void list() {
+        //given
+        Long id = addSampleData();
+        Long id2 = addSampleData();
+        List<Recruit> savedRecruits = new ArrayList<>();
+        savedRecruits.add(recruitRepository.findOne(id));
+        savedRecruits.add(recruitRepository.findOne(id2));
+        when(recruitRepository.findAll(0, 20)).thenReturn(savedRecruits);
+        //when
+        List<Recruit> recruits = recruitRepository.findAll(0, 20);
+        //DTO 변환
+        List<RecruitDto> collect = recruits.stream().map(r -> RecruitDto.builder().recruit(r).build()).collect(Collectors.toList());
+        //than
+        assertEquals(2, collect.size(), "삭제된 공고는 포함하지 않는다.");
+
     }
 }
