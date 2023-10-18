@@ -1,8 +1,10 @@
 package com.example.wantedpreonboardingbackend.controller;
 
 import com.example.wantedpreonboardingbackend.domain.Company;
+import com.example.wantedpreonboardingbackend.domain.Recruit;
 import com.example.wantedpreonboardingbackend.dto.AddRecruitRequest;
 import com.example.wantedpreonboardingbackend.dto.AddRecruitResponse;
+import com.example.wantedpreonboardingbackend.dto.DeleteRecruitResponse;
 import com.example.wantedpreonboardingbackend.service.RecruitService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,10 +16,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,14 +39,16 @@ class RecruitControllerTest {
 
     private MockMvc mockMvc;
 
-    private Company company;
-
     @BeforeEach
     public void initMockMvc() {
         mockMvc = MockMvcBuilders.standaloneSetup(recruitController).build();
-        company = new Company();
-        company.setId(1L);
-        company.setName("원티드");
+    }
+
+    public Company generateCompany(String name) {
+        Company company = new Company();
+        company.setId((long) Math.random());
+        company.setName(name);
+        return company;
     }
 
     @Test
@@ -66,7 +72,8 @@ class RecruitControllerTest {
                 .andExpect(jsonPath("position").value("백엔드 주니어 개발자"))
                 .andExpect(jsonPath("skills").value("Python"))
                 .andExpect(jsonPath("content").value("원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은.."))
-                .andExpect(jsonPath("companyName").value("원티드"));
+                .andExpect(jsonPath("companyName").value("원티드"))
+                .andDo(MockMvcResultHandlers.print());
     }
 
     private AddRecruitRequest createFullFilledAddRecruitRequest() {
@@ -81,9 +88,42 @@ class RecruitControllerTest {
 
 
     private AddRecruitResponse makeAddRecruitResponseOf(AddRecruitRequest request) {
-        AddRecruitResponse response = AddRecruitResponse.builder().recruit(request.toEntity(company)).build();
+        Recruit recruit = makeSampleRecruit();
+        AddRecruitResponse response = AddRecruitResponse.builder().recruit(recruit).build();
         response.setId(12345L); // 저장 시 ID 생성됨
         return response;
     }
+
+    private Recruit makeSampleRecruit() {
+        Recruit recruit = Recruit.builder()
+                .skills("Python")
+                .position("백엔드 주니어 개발자")
+                .reward(1000000L)
+                .content("원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..")
+                .company(generateCompany("원티드"))
+                .build();
+        return recruit;
+    }
+
+    @Test
+    void deleteRecruit_success() throws Exception {
+        //given
+        Long id = (long) Math.random();
+        DeleteRecruitResponse response = new DeleteRecruitResponse(makeSampleRecruit());
+        response.setId(id);
+        response.setDeleted(Boolean.TRUE);
+        doReturn(response).when(recruitService).delete(anyLong());
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.delete("/recruits/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").exists())
+                .andExpect(jsonPath("deleted").exists())
+                .andExpect(jsonPath("deleted").value(Boolean.TRUE)) // True여야함
+                .andDo(MockMvcResultHandlers.print());
+
+    }
+
 
 }

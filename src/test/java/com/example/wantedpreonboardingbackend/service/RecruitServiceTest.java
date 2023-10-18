@@ -2,10 +2,7 @@ package com.example.wantedpreonboardingbackend.service;
 
 import com.example.wantedpreonboardingbackend.domain.Company;
 import com.example.wantedpreonboardingbackend.domain.Recruit;
-import com.example.wantedpreonboardingbackend.dto.AddRecruitRequest;
-import com.example.wantedpreonboardingbackend.dto.AddRecruitResponse;
-import com.example.wantedpreonboardingbackend.dto.EditRecruitRequest;
-import com.example.wantedpreonboardingbackend.dto.EditRecruitResponse;
+import com.example.wantedpreonboardingbackend.dto.*;
 import com.example.wantedpreonboardingbackend.repository.CompanyRepository;
 import com.example.wantedpreonboardingbackend.repository.RecruitRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -67,15 +64,7 @@ class RecruitServiceTest {
     @DisplayName("공고 수정")
     void edit() {
         //given
-        Recruit recruit = Recruit.builder()
-                .skills("Python")
-                .position("백엔드 주니어 개발자")
-                .reward(1000000L)
-                .content("원티드랩에서 프론트엔드엔드 주니어 개발자를 채용합니다. 자격요건은..")
-                .company(generateCompany("(주)원티드"))
-                .build();
-        when(recruitRepository.findOne(anyLong())).thenReturn(recruit);
-
+        addSampleData();
         EditRecruitRequest editRecruitRequest = new EditRecruitRequest();
         editRecruitRequest.setContent("원티드랩에서 프론트엔드엔드 주니어 개발자를 채용합니다. 자격요건은.."); //내용 수정
         editRecruitRequest.setReward(77777L); //리워드 수정
@@ -105,6 +94,32 @@ class RecruitServiceTest {
 
         //than
         assertThrows(NullPointerException.class, () -> recruitService.edit(invalidId, editRecruitRequest));
+    }
 
+
+    @Test
+    @DisplayName("채용공고 삭제")
+    void delete() {
+        //given
+        Long id = addSampleData();
+        //when
+        DeleteRecruitResponse response = recruitService.delete(id);
+        //than
+        assertEquals(Boolean.TRUE, response.isDeleted(), "수정한 내용이 반영 되어야한다.");
+
+    }
+
+    private Long addSampleData() {
+        Recruit recruit = Recruit.builder()
+                .skills("Python")
+                .position("백엔드 주니어 개발자")
+                .reward(1000000L)
+                .content("원티드랩에서 프론트엔드엔드 주니어 개발자를 채용합니다. 자격요건은..")
+                .company(generateCompany("(주)원티드"))
+                .build();
+        Long id = recruitRepository.save(recruit);
+        when(recruitRepository.findOne(anyLong())).thenReturn(recruit);
+
+        return id;
     }
 }

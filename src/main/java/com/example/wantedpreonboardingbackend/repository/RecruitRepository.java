@@ -17,6 +17,7 @@ public class RecruitRepository {
     }
 
     public Recruit findOne(Long id) {
+        //soft delete 된 객체도 함께 조회한다.
         return em.find(Recruit.class, id);
     }
 }

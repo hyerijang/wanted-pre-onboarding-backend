@@ -2,13 +2,11 @@ package com.example.wantedpreonboardingbackend.service;
 
 import com.example.wantedpreonboardingbackend.domain.Company;
 import com.example.wantedpreonboardingbackend.domain.Recruit;
-import com.example.wantedpreonboardingbackend.dto.AddRecruitRequest;
-import com.example.wantedpreonboardingbackend.dto.AddRecruitResponse;
-import com.example.wantedpreonboardingbackend.dto.EditRecruitRequest;
-import com.example.wantedpreonboardingbackend.dto.EditRecruitResponse;
+import com.example.wantedpreonboardingbackend.dto.*;
 import com.example.wantedpreonboardingbackend.repository.CompanyRepository;
 import com.example.wantedpreonboardingbackend.repository.RecruitRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,4 +37,16 @@ public class RecruitService {
     }
 
 
+    @Transactional
+    public DeleteRecruitResponse delete(Long id) {
+        Recruit recruit = recruitRepository.findOne(id);
+        if (recruit == null) {
+            throw new NullPointerException("존재하지 않는 공고의 id 입니다.");
+        }
+        if (recruit.isDeleted()) {
+            throw new NullPointerException("삭제 된 공고입니다.");
+        }
+        recruit.deleteRecruit();
+        return new DeleteRecruitResponse(recruit);
+    }
 }

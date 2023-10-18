@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 
 @Getter
@@ -26,14 +25,17 @@ public class Recruit {
     @NotNull
     private Long reward;
     @NotBlank
-
     private String content;
     @NotBlank
     private String skills;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @NotNull
+    private boolean isDeleted = Boolean.FALSE;
 
     @Builder
     public Recruit(Long id, String position, Long reward, String content, String skills, Company company) {
@@ -56,5 +58,9 @@ public class Recruit {
         this.reward = editRecruitRequest.getReward();
         this.content = editRecruitRequest.getContent();
         this.skills = editRecruitRequest.getSkills();
+    }
+
+    public void deleteRecruit() {
+        this.isDeleted = Boolean.TRUE;
     }
 }

@@ -21,11 +21,13 @@ public class RecruitController {
         return recruitService.post(addRecruitRequest);
     }
 
+    //2.채용공고 수정
     @PatchMapping("/{id}")
     public EditRecruitResponse addRecruit(@PathVariable Long id, @RequestBody EditRecruitRequest editRecruitRequest) {
         return recruitService.edit(id, editRecruitRequest);
     }
 
+    //3.채용공고 삭제
     @DeleteMapping("/{id}")
     public DeleteRecruitResponse removeRecruit(@PathVariable Long id) {
         return recruitService.delete(id);
