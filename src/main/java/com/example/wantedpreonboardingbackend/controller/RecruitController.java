@@ -39,7 +39,7 @@ public class RecruitController {
     }
 
 
-    //3.채용공고 삭제
+    //4.채용공고 목록 조회
     @GetMapping()
     public Result recruits(@RequestParam(value = "offset", defaultValue = "0") int offset, @RequestParam(value = "limit", defaultValue = "20") int limit) {
         List<RecruitDto> result = recruitService.findRecruits(offset, limit);
@@ -53,6 +53,17 @@ public class RecruitController {
     public static class Result<T> {
         private T data;
     }
+
+    //5. 채용 상세 페이지 가져오기
+    @GetMapping("/{id}")
+    public RecruitDetailDto detail(@PathVariable Long id) {
+
+
+        RecruitDetailDto detail = recruitService.detail(id);
+        return detail;
+
+    }
+
 
 }
 

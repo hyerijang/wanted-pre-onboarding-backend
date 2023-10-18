@@ -34,9 +34,7 @@ public class RecruitService {
     @Transactional
     public EditRecruitResponse edit(Long id, EditRecruitRequest editRecruitRequest) {
         Recruit recruit = recruitRepository.findOne(id);
-        if (recruit == null) {
-            throw new NullPointerException("존재하지 않는 공고의 id 입니다.");
-        }
+        validationCheck(recruit); //삭제된 공고는 수정 불가함
         recruit.editRecruit(editRecruitRequest);
         return new EditRecruitResponse(recruit);
     }
@@ -45,14 +43,18 @@ public class RecruitService {
     @Transactional
     public DeleteRecruitResponse delete(Long id) {
         Recruit recruit = recruitRepository.findOne(id);
+        validationCheck(recruit);
+        recruit.deleteRecruit();
+        return new DeleteRecruitResponse(recruit);
+    }
+
+    private static void validationCheck(Recruit recruit) {
         if (recruit == null) {
             throw new NullPointerException("존재하지 않는 공고의 id 입니다.");
         }
         if (recruit.isDeleted()) {
             throw new NullPointerException("삭제 된 공고입니다.");
         }
-        recruit.deleteRecruit();
-        return new DeleteRecruitResponse(recruit);
     }
 
     /**
@@ -67,4 +69,9 @@ public class RecruitService {
         return collect;
     }
 
+    public RecruitDetailDto detail(Long id) {
+        Recruit recruit = recruitRepository.findOne(id);
+        validationCheck(recruit);
+        return new RecruitDetailDto(recruit);
+    }
 }

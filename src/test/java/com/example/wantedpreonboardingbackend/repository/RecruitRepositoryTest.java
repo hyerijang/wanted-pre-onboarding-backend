@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class))
 class RecruitRepositoryTest {
 
@@ -124,6 +126,30 @@ class RecruitRepositoryTest {
         for (Recruit r : result) {
             Assertions.assertThat(r.isDeleted()).isEqualTo(Boolean.FALSE); // 삭제되지 않은 공고만 조회되어야한다.
         }
+    }
+
+
+    @DisplayName("Id로 단건 조회")
+    @Test
+    void findOne() {
+        //given
+        Recruit recruit = Recruit.builder()
+                .skills("Python")
+                .position("백엔드 주니어 개발자")
+                .reward(1000000L)
+                .content("원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..")
+                .company(saveCompany("원티드"))
+                .build();
+        Long savedId = recruitRepository.save(recruit);
+
+        //when
+        Recruit result = em.find(Recruit.class, savedId);
+        //than
+        assertEquals(savedId, result.getId(), "Id가 동일해야한다");
+        assertEquals("Python", result.getSkills(), "skills가 동일해야한다");
+        assertEquals(1000000L, result.getReward(), "reward가 동일해야한다");
+        assertEquals("원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은..", result.getContent(), "reward가 동일해야한다");
+        assertEquals("원티드", result.getCompany().getName(), "회사 정보가 동일해야한다");
     }
 
 }

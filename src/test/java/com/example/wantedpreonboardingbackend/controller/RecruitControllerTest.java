@@ -2,10 +2,7 @@ package com.example.wantedpreonboardingbackend.controller;
 
 import com.example.wantedpreonboardingbackend.domain.Company;
 import com.example.wantedpreonboardingbackend.domain.Recruit;
-import com.example.wantedpreonboardingbackend.dto.AddRecruitRequest;
-import com.example.wantedpreonboardingbackend.dto.AddRecruitResponse;
-import com.example.wantedpreonboardingbackend.dto.DeleteRecruitResponse;
-import com.example.wantedpreonboardingbackend.dto.RecruitDto;
+import com.example.wantedpreonboardingbackend.dto.*;
 import com.example.wantedpreonboardingbackend.service.RecruitService;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,8 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.wantedpreonboardingbackend.controller.RecruitController.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -149,6 +146,32 @@ class RecruitControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("data").exists())
                 .andExpect(jsonPath("data.size()").value(3))
+                .andDo(MockMvcResultHandlers.print());
+
+    }
+
+    @DisplayName("단건조회")
+    @Test
+    void findOne() throws Exception {
+        //given
+        Long id = (long) Math.random();
+        RecruitDetailDto response = new RecruitDetailDto(makeSampleRecruit());
+        doReturn(response).when(recruitService).detail(id);
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.get("/recruits/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("reward").exists())
+                .andExpect(jsonPath("position").exists())
+                .andExpect(jsonPath("skills").exists())
+                .andExpect(jsonPath("content").exists())
+                .andExpect(jsonPath("companyName").exists())
+                .andExpect(jsonPath("reward").value(1000000L))
+                .andExpect(jsonPath("position").value("백엔드 주니어 개발자"))
+                .andExpect(jsonPath("skills").value("Python"))
+                .andExpect(jsonPath("content").value("원티드랩에서 백엔드 주니어 개발자를 채용합니다. 자격요건은.."))
+                .andExpect(jsonPath("companyName").value("원티드"))
                 .andDo(MockMvcResultHandlers.print());
 
     }
