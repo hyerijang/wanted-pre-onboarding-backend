@@ -135,7 +135,7 @@ class RecruitServiceTest {
         //when
         List<Recruit> recruits = recruitRepository.findAll(0, 20);
         //DTO 변환
-        List<RecruitDto> collect = recruits.stream().map(r -> RecruitDto.builder().recruit(r).build()).collect(Collectors.toList());
+        List<RecruitSimpleDto> collect = recruits.stream().map(r -> RecruitSimpleDto.builder().recruit(r).build()).collect(Collectors.toList());
         //than
         assertEquals(2, collect.size(), "삭제된 공고는 포함하지 않는다.");
 

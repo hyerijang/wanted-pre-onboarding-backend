@@ -132,10 +132,10 @@ class RecruitControllerTest {
     @Test
     void getList() throws Exception {
         //given
-        List<RecruitDto> response = new ArrayList<>();
-        response.add(new RecruitDto(makeSampleRecruit()));
-        response.add(new RecruitDto(makeSampleRecruit()));
-        response.add(new RecruitDto(makeSampleRecruit()));
+        List<RecruitSimpleDto> response = new ArrayList<>();
+        response.add(new RecruitSimpleDto(makeSampleRecruit()));
+        response.add(new RecruitSimpleDto(makeSampleRecruit()));
+        response.add(new RecruitSimpleDto(makeSampleRecruit()));
         doReturn(response).when(recruitService).findRecruits(0,20);
         //when
         mockMvc.perform(MockMvcRequestBuilders.get("/recruits")

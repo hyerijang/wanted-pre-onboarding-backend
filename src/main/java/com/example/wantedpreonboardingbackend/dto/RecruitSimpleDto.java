@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class RecruitDto {
+public class RecruitSimpleDto {
 
     @NotNull
     private Long id; //채용공고 id
@@ -26,7 +26,7 @@ public class RecruitDto {
     private String companyName;
 
     @Builder
-    public RecruitDto(Recruit recruit) {
+    public RecruitSimpleDto(Recruit recruit) {
         this.id = recruit.getId();
         this.position = recruit.getPosition();
         this.reward = recruit.getReward();

@@ -1,6 +1,5 @@
 package com.example.wantedpreonboardingbackend.service;
 
-import com.example.wantedpreonboardingbackend.controller.RecruitController;
 import com.example.wantedpreonboardingbackend.domain.Company;
 import com.example.wantedpreonboardingbackend.domain.Recruit;
 import com.example.wantedpreonboardingbackend.dto.*;
@@ -80,11 +79,11 @@ public class RecruitService {
     /**
      * 전체 채용 공고 조회 - 삭제된 공고는 제외
      */
-    public List<RecruitDto> findRecruits(int offset, int limit) {
+    public List<RecruitSimpleDto> findRecruits(int offset, int limit) {
         List<Recruit> recruits = recruitRepository.findAll(offset, limit);
         //DTO 변환
-        List<RecruitDto> collect = recruits.stream()
-                .map(r -> RecruitDto.builder().recruit(r).build())
+        List<RecruitSimpleDto> collect = recruits.stream()
+                .map(r -> RecruitSimpleDto.builder().recruit(r).build())
                 .collect(Collectors.toList());
         return collect;
     }
