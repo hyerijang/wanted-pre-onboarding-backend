@@ -36,9 +36,10 @@
 
 
 ### 공통
-- Requset, Response에 validation 적용 (String:@NotEmpty, Long:@NotNull)
-- DTO - Entity 변환은 서비스단에서 이루어진다.
-- 단위테스트 작성 (repository, service, controller)
+- Requset, Response에 `validation` 적용 (String:@NotEmpty, Long:@NotNull)
+- `DTO - Entity 변환`은 `서비스단`에서 이루어진다.
+- `단위테스트` 작성 (repository, service, controller)
+- 리포지토리는 Spring Data Jpa가 아닌 순수 `Jpa`로 구현하였습니다.
 
 ### 회사 등록
 ```json
@@ -140,7 +141,7 @@
 
 - 삭제된 데이터를 제외한 전체 공고를 조회한다.
 - default offset = 0,  limit = 20
-- 페치 조인으로 1+N 방지
+- `페치 조인`으로 1+N 방지
 - 응답 시 Result 클래스로 컬렉션을 감싸서 향후 필요한 필드 (e.g. size) 추가할 수 있게 함
 
 ### 채용 상세 페이지
