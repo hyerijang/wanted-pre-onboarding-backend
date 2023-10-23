@@ -67,14 +67,14 @@ class RecruitServiceTest {
     @DisplayName("공고 수정")
     void edit() {
         //given
-        addSampleData();
+        Long id = addSampleData();
         EditRecruitRequest editRecruitRequest = new EditRecruitRequest();
         editRecruitRequest.setContent("원티드랩에서 프론트엔드엔드 주니어 개발자를 채용합니다. 자격요건은.."); //내용 수정
         editRecruitRequest.setReward(77777L); //리워드 수정
         editRecruitRequest.setPosition("프론트엔드엔드 주니어 개발자"); //포지션수정
         editRecruitRequest.setSkills("HTML");//사용기술 수정
         //when
-        EditRecruitResponse response = recruitService.edit(1L, editRecruitRequest);
+        EditRecruitResponse response = recruitService.edit(id, editRecruitRequest);
         //than
         assertEquals("원티드랩에서 프론트엔드엔드 주니어 개발자를 채용합니다. 자격요건은..", response.getContent(), "수정한 내용이 반영 되어야한다.");
         assertEquals(77777L, response.getReward(), "수정한 채용보상금이 반영 되어야한다.");
